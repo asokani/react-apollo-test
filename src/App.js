@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {BrowserRouter as Router, Route} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import {ApolloProvider, createNetworkInterface, ApolloClient} from 'react-apollo'
 
 import ScreenWelcome from './components/ScreenWelcome';
@@ -17,33 +17,33 @@ const client = new ApolloClient({networkInterface})
 class App extends Component {
     render() {
         return (
-            <div>
-                <nav className="navbar navbar-inverse navbar-fixed-top">
-                    <div className="container">
-                        <div className="navbar-header">
-                        </div>
-                        <div id="navbar" className="collapse navbar-collapse">
-                            <ul className="nav navbar-nav">
-                                <li><a href="/">Home</a></li>
-                                <li><a href="/screen1">Screen1</a></li>
-                                <li><a href="/screen2">Screen2</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
+            <ApolloProvider client={client}>
+                <Router>
+                    <div>
+                        <nav className="navbar navbar-inverse navbar-fixed-top">
+                            <div className="container">
+                                <div className="navbar-header">
+                                </div>
+                                <div id="navbar" className="collapse navbar-collapse">
+                                    <ul className="nav navbar-nav">
+                                        <li><Link to="/">Home</Link></li>
+                                        <li><Link to="/screen1">Screen1</Link></li>
+                                        <li><Link to="/screen2">Screen2</Link></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
 
-                <div className="container">
-                    <ApolloProvider client={client}>
-                        <Router>
+                        <div className="container">
                             <div>
                                 <Route exact path='/' component={ScreenWelcome} />
                                 <Route path='/screen1' component={Screen1} />
                                 <Route path='/screen2' component={Screen2} />
                             </div>
-                        </Router>
-                    </ApolloProvider>
-                </div>
-            </div>
+                        </div>
+                    </div>
+                </Router>
+            </ApolloProvider>
         );
     }
 }

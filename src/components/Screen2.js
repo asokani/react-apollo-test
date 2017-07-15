@@ -1,35 +1,30 @@
 import React, { Component } from 'react';
-import { gql, graphql} from 'react-apollo'
+import { gql, graphql} from 'react-apollo';
+
+import TextInput from './TextInput';
 
 class Screen2 extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {saveAll: false};
+    }
+
     componentWillReceiveProps(newProps) {
         if (!newProps.data.loading) {
             console.log(newProps.data)
             this.setState({parameters: newProps.data.Screen.parameters});
         }
     }
-    onChangeParam(id, value) {
-        let params = this.state.parameters.map((nameValue) => {
-            let newNameValue = {...nameValue}
-            if (nameValue.id === id) {
-                newNameValue.value = value;
-            }
-            return newNameValue;
-        });
-        this.setState({parameters: params})
-    }
+
     render() {
         if (this.props.data.loading) {
             return (
-                <div>...</div>
+                <div>...loading</div>
             )
         }
 
-        let parameters = this.state.parameters.map((nameValue) => (
-            <div className="form-group" key={nameValue.id}>
-                <label htmlFor={nameValue.id}>{nameValue.name}</label>
-                <input type="text" onChange={(event) => this.onChangeParam(nameValue.id, event.target.value)} className="form-control" id={nameValue.id} placeholder={nameValue.name} value={nameValue.value} />
-            </div>
+        let parameters = this.props.data.Screen.parameters.map((nameValue) => (
+            <TextInput saveAll={this.state.saveAll} id={nameValue.id} name={nameValue.name} value={nameValue.value} />
         ));
 
         return (
@@ -37,7 +32,7 @@ class Screen2 extends Component {
                 <h3>Screen2</h3>
                 <form>
                     {parameters}
-                    <button type="submit" className="btn btn-default">Save</button>
+                    <button onClick={(e) => {e.preventDefault();this.setState({saveAll: !this.state.saveAll})}} type="submit" className="btn btn-default">Save</button>
                 </form>
             </div>
         );
@@ -59,5 +54,6 @@ const Screen2WithData = graphql(FeedQuery, {
         fetchPolicy: 'network-only'
     },
 })(Screen2)
+
 
 export default Screen2WithData;

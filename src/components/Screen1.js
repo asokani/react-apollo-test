@@ -1,19 +1,30 @@
 import React, { Component } from 'react';
-import { gql, graphql} from 'react-apollo'
+import { gql, graphql} from 'react-apollo';
+
+import TextInput from './TextInput';
 
 class Screen1 extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {saveAll: false};
+    }
+
+    componentWillReceiveProps(newProps) {
+        if (!newProps.data.loading) {
+            console.log(newProps.data)
+            this.setState({parameters: newProps.data.Screen.parameters});
+        }
+    }
+
     render() {
         if (this.props.data.loading) {
             return (
-                <div>...</div>
+                <div>...loading</div>
             )
         }
 
         let parameters = this.props.data.Screen.parameters.map((nameValue) => (
-            <div className="form-group" key={nameValue.id}>
-                <label htmlFor={nameValue.id}>{nameValue.name}</label>
-                <input type="text" className="form-control" id={nameValue.id} placeholder={nameValue.name} value={nameValue.value} />
-            </div>
+            <TextInput saveAll={this.state.saveAll} id={nameValue.id} name={nameValue.name} value={nameValue.value} />
         ));
 
         return (
@@ -21,7 +32,7 @@ class Screen1 extends Component {
                 <h3>Screen1</h3>
                 <form>
                     {parameters}
-                    <button type="submit" className="btn btn-default">Save</button>
+                    <button onClick={(e) => {e.preventDefault();this.setState({saveAll: !this.state.saveAll})}} type="submit" className="btn btn-default">Save</button>
                 </form>
             </div>
         );
@@ -29,7 +40,7 @@ class Screen1 extends Component {
 }
 
 const FeedQuery = gql`query {
-      Screen(id: "cj55f472bnbwj0184z06dmffu")  {
+      Screen(id: "cj55rrus4o6dd0184rk9ugrjy")  {
         parameters {
           id
           name
@@ -43,5 +54,6 @@ const Screen1WithData = graphql(FeedQuery, {
         fetchPolicy: 'network-only'
     },
 })(Screen1)
+
 
 export default Screen1WithData;

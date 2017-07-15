@@ -7,7 +7,7 @@ class TextInput extends Component {
         this.state = {value: ''};
     }
     componentWillReceiveProps(newProps) {
-        if (newProps.saveAll != this.props.saveAll && this.state.value != this.props.value) {
+        if (newProps.saveAll !== this.props.saveAll && this.state.value !== this.props.value) {
             this.props.mutate({
                 variables: {
                     id: this.props.id,
@@ -22,7 +22,7 @@ class TextInput extends Component {
         });
     }
     render() {
-        let { id, name, value } = this.props;
+        let { id, name } = this.props;
 
         return (
             <div className="form-group" key={id}>

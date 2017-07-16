@@ -3,7 +3,7 @@ import { gql, graphql} from 'react-apollo';
 
 import TextInput from './TextInput';
 
-class Screen2 extends Component {
+class Screen extends Component {
     constructor(props) {
         super(props);
         this.state = {saveAll: false};
@@ -11,7 +11,6 @@ class Screen2 extends Component {
 
     componentWillReceiveProps(newProps) {
         if (!newProps.data.loading) {
-            console.log(newProps.data)
             this.setState({parameters: newProps.data.Screen.parameters});
         }
     }
@@ -19,17 +18,17 @@ class Screen2 extends Component {
     render() {
         if (this.props.data.loading) {
             return (
-                <div>...loading</div>
+                <div style={{marginTop: 20}} className="alert alert-info" role="alert">...loading</div>
             )
         }
 
         let parameters = this.props.data.Screen.parameters.map((nameValue) => (
-            <TextInput saveAll={this.state.saveAll} id={nameValue.id} name={nameValue.name} value={nameValue.value} />
+            <TextInput saveAll={this.state.saveAll} key={nameValue.id} id={nameValue.id} name={nameValue.name} value={nameValue.value} />
         ));
 
         return (
             <div>
-                <h3>Screen2</h3>
+                <h3>Screen1</h3>
                 <form>
                     {parameters}
                     <button onClick={(e) => {e.preventDefault();this.setState({saveAll: !this.state.saveAll})}} type="submit" className="btn btn-default">Save</button>
@@ -39,8 +38,8 @@ class Screen2 extends Component {
     }
 }
 
-const FeedQuery = gql`query {
-      Screen(id: "cj55f472bnbwj0184z06dmffu")  {
+const FeedQuery = gql`query Screen($id: ID!) {
+      Screen(id:$id)  {
         parameters {
           id
           name
@@ -49,11 +48,14 @@ const FeedQuery = gql`query {
       } 
     }`
 
-const Screen2WithData = graphql(FeedQuery, {
-    options: {
-        fetchPolicy: 'network-only'
-    },
-})(Screen2)
+const ScreenWithData = graphql(FeedQuery, {
+    options: (props) => {
+        return {
+            variables: { id: props.screenId },
+            fetchPolicy: 'network-only'
+        }
+    }
+})(Screen)
 
 
-export default Screen2WithData;
+export default ScreenWithData;

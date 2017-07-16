@@ -3,8 +3,7 @@ import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import {ApolloProvider, createNetworkInterface, ApolloClient} from 'react-apollo'
 
 import ScreenWelcome from './components/ScreenWelcome';
-import Screen1 from './components/Screen1';
-import Screen2 from './components/Screen2';
+import Screen from './components/Screen';
 
 import './App.css';
 
@@ -16,6 +15,20 @@ const client = new ApolloClient({networkInterface})
 
 class App extends Component {
     render() {
+        let arr = [
+            {id: "cj55f472bnbwj0184z06dmffu", path: "/screen1"},
+            {id: "cj55rrus4o6dd0184rk9ugrjy", path: "/screen2"},
+            {id: "cj56dcmhap43a0184ic2f5zbz", path: "/screen3"},
+            {id: "cj56dcphnp43d0184l4jsao7f", path: "/screen4"},
+        ];
+        let screens = arr.map((value) => {
+            return (
+                <Route path={value.path} key={value.id} render={({match}) => (
+                    <Screen screenId={value.id}  />
+                )} />
+            )
+        });
+
         return (
             <ApolloProvider client={client}>
                 <Router>
@@ -27,8 +40,10 @@ class App extends Component {
                                 <div id="navbar" className="collapse navbar-collapse">
                                     <ul className="nav navbar-nav">
                                         <li><Link to="/">Home</Link></li>
-                                        <li><Link to="/screen1">Screen1</Link></li>
-                                        <li><Link to="/screen2">Screen2</Link></li>
+                                        <li><Link to="/screen1">Screen 1</Link></li>
+                                        <li><Link to="/screen2">Screen 2</Link></li>
+                                        <li><Link to="/screen3">Screen 3</Link></li>
+                                        <li><Link to="/screen4">Screen 4</Link></li>
                                     </ul>
                                 </div>
                             </div>
@@ -37,8 +52,7 @@ class App extends Component {
                         <div className="container">
                             <div>
                                 <Route exact path='/' component={ScreenWelcome} />
-                                <Route path='/screen1' component={Screen1} />
-                                <Route path='/screen2' component={Screen2} />
+                                {screens}
                             </div>
                         </div>
                     </div>
